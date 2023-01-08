@@ -111,6 +111,7 @@ func (l *Lexer) skipWhitespace() {
 
 func (l *Lexer) readIdentifier() string {
 	position := l.position
+	// 标识符号下划线，字母和数字
 	for isLetter(l.ch) || '0' <= l.ch && l.ch <= '9' {
 		l.readChar()
 	}
