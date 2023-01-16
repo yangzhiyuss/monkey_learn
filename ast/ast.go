@@ -5,6 +5,7 @@ import (
 	"monkey_learn/token"
 )
 
+// Node root Node
 type Node interface {
 	TokenLiteral() string
 	String() string
@@ -22,6 +23,7 @@ type Expression interface {
 	expressionNode()
 }
 
+// Program storage statement
 type Program struct {
 	Statements []Statement
 }
@@ -43,6 +45,8 @@ func (p *Program) String() string {
 
 	return out.String()
 }
+
+/* -----------implement statement--------------------*/
 
 // LetStatement Statements
 type LetStatement struct {
@@ -72,24 +76,6 @@ func (ls *LetStatement) String() string {
 	out.WriteString(";")
 
 	return out.String()
-}
-
-// Identifier Expressions
-type Identifier struct {
-	Token token.Token //token.IDENT词法单元
-	Value string
-}
-
-func (i *Identifier) TokenLiteral() string {
-	return i.Token.Literal
-}
-
-func (i *Identifier) expressionNode() {
-
-}
-
-func (i *Identifier) String() string {
-	return i.Value
 }
 
 // ReturnStatement Statement
@@ -135,4 +121,64 @@ func (es *ExpressionStatement) String() string {
 		return es.Expression.String()
 	}
 	return ""
+}
+
+/*-----------------implement expression------------------*/
+
+// Identifier Expression
+type Identifier struct {
+	Token token.Token //token.IDENT词法单元
+	Value string
+}
+
+func (i *Identifier) expressionNode() {
+
+}
+
+func (i *Identifier) TokenLiteral() string {
+	return i.Token.Literal
+}
+
+func (i *Identifier) String() string {
+	return i.Value
+}
+
+type IntegerLiteral struct {
+	Token token.Token
+	Value int64
+}
+
+func (il *IntegerLiteral) expressionNode() {
+
+}
+
+func (il *IntegerLiteral) TokenLiteral() string {
+	return il.Token.Literal
+}
+
+func (il *IntegerLiteral) String() string {
+	return il.Token.Literal
+}
+
+type PrefixExpression struct {
+	Token    token.Token
+	Operator string
+	Right    Expression
+}
+
+func (pe *PrefixExpression) expressionNode()  {
+
+}
+
+func (pe *PrefixExpression) TokenLiteral() string {
+	return pe.Token.Literal
+}
+
+func (pe *PrefixExpression) String() string {
+	var out bytes.Buffer
+	out.WriteString("(")
+	out.WriteString(pe.Operator)
+	out.WriteString(pe.Right.String())
+	out.WriteString(")")
+	return out.String()
 }
