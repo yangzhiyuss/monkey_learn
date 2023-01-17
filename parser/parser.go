@@ -34,6 +34,18 @@ type Parser struct {
 	infixParseFn   map[token.TokenType]infixParseFn //中缀函数
 }
 
+// 算术运算符优先级
+var precedences = map[token.TokenType]int{
+	token.EQ: EQUALS,
+	token.NOT_EQ: EQUALS,
+	token.LT: LESSGREATER,
+	token.GT: LESSGREATER,
+	token.PLUS: SUM,
+	token.MINUS: SUM,
+	token.SLASH: PRODUCT,
+	token.ASTERISK: PRODUCT,
+}
+
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{
 		l:      l,
@@ -42,12 +54,24 @@ func New(l *lexer.Lexer) *Parser {
 	p.nextToken()
 	p.nextToken()
 
-	// 初始化前缀map
+	// prefixParse
 	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
+
+	//infixParse
+	p.infixParseFn = make(map[token.TokenType]infixParseFn)
+	p.registerInfix(token.PLUS, p.parseInfixExpression)
+	p.registerInfix(token.MINUS, p.parseInfixExpression)
+	p.registerInfix(token.SLASH, p.parseInfixExpression)
+	p.registerInfix(token.ASTERISK, p.parseInfixExpression)
+	p.registerInfix(token.EQ, p.parseInfixExpression)
+	p.registerInfix(token.NOT_EQ, p.parseInfixExpression)
+	p.registerInfix(token.LT, p.parseInfixExpression)
+	p.registerInfix(token.GT, p.parseInfixExpression)
+
 	return p
 }
 
@@ -72,6 +96,21 @@ func (p *Parser) noPrefixParseFnError(t token.TokenType)  {
 	p.errors = append(p.errors, msg)
 }
 
+/*------------------ precedence ---------------*/
+func (p *Parser) peekPrecedence() int {
+	if precedence, ok := precedences[p.peekToken.Type]; ok {
+		return precedence
+	}
+	return LOWEST
+}
+
+func (p *Parser) curPrecedence() int {
+	if precedence, ok := precedences[p.curToken.Type]; ok {
+		return precedence
+	}
+	return LOWEST
+}
+
 /*------------------ register fn -----------------------*/
 
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
@@ -82,7 +121,7 @@ func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFn[tokenType] = fn
 }
 
-/*----------- prefixParseFn ------------*/
+/*----------- parsePrefixFn ------------*/
 
 func (p *Parser) parseIdentifier() ast.Expression {
 	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
@@ -107,6 +146,21 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 	}
 	p.nextToken()
 	expression.Right = p.parseExpression(PREFIX)
+	return expression
+}
+
+/*----------- parseInfixFn ------------*/
+func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	expression := &ast.InfixExpression{
+		Token:    p.curToken,
+		Operator: p.curToken.Literal,
+		Left:     left,
+	}
+
+	precedence := p.curPrecedence()
+	p.nextToken()
+	expression.Right = p.parseExpression(precedence)
+
 	return expression
 }
 
@@ -193,6 +247,7 @@ func (p *Parser) parseExpressionStatement() ast.Statement {
 
 	stmt.Expression = p.parseExpression(LOWEST)
 
+	//下一个token是;则下移一个token
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
@@ -200,11 +255,24 @@ func (p *Parser) parseExpressionStatement() ast.Statement {
 }
 
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	//先解析前缀表达式，后面全部都是中缀表达式
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
 		return nil
 	}
 	leftExp := prefix()
+
+	//中缀表达式
+	// ;结束 或者 优先级低的结束
+	for !p.peekTokenIs(token.SEMICOLON) && precedence < p.peekPrecedence() {
+		infix := p.infixParseFn[p.peekToken.Type]
+		if infix == nil {
+			return leftExp
+		}
+		p.nextToken()
+		leftExp = infix(leftExp)
+	}
+
 	return leftExp
 }
