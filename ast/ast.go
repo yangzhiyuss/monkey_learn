@@ -143,6 +143,7 @@ func (i *Identifier) String() string {
 	return i.Value
 }
 
+// IntegerLiteral integer类型
 type IntegerLiteral struct {
 	Token token.Token
 	Value int64
@@ -160,6 +161,25 @@ func (il *IntegerLiteral) String() string {
 	return il.Token.Literal
 }
 
+// Boolean bool类型
+type Boolean struct {
+	Token token.Token
+	Value bool
+}
+
+func (b *Boolean) expressionNode() {
+
+}
+
+func (b *Boolean) TokenLiteral() string {
+	return b.Token.Literal
+}
+
+func (b *Boolean) String() string {
+	return b.Token.Literal
+}
+
+// PrefixExpression 前缀
 type PrefixExpression struct {
 	Token    token.Token
 	Operator string
@@ -183,6 +203,7 @@ func (pe *PrefixExpression) String() string {
 	return out.String()
 }
 
+// InfixExpression 中缀
 type InfixExpression struct {
 	Token    token.Token //算数运算符
 	Left     Expression

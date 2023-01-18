@@ -31,18 +31,18 @@ type Parser struct {
 	errors    []string
 
 	prefixParseFns map[token.TokenType]prefixParseFn //前缀函数
-	infixParseFn   map[token.TokenType]infixParseFn //中缀函数
+	infixParseFn   map[token.TokenType]infixParseFn  //中缀函数
 }
 
 // 算术运算符优先级
 var precedences = map[token.TokenType]int{
-	token.EQ: EQUALS,
-	token.NOT_EQ: EQUALS,
-	token.LT: LESSGREATER,
-	token.GT: LESSGREATER,
-	token.PLUS: SUM,
-	token.MINUS: SUM,
-	token.SLASH: PRODUCT,
+	token.EQ:       EQUALS,
+	token.NOT_EQ:   EQUALS,
+	token.LT:       LESSGREATER,
+	token.GT:       LESSGREATER,
+	token.PLUS:     SUM,
+	token.MINUS:    SUM,
+	token.SLASH:    PRODUCT,
 	token.ASTERISK: PRODUCT,
 }
 
@@ -60,6 +60,8 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
 	p.registerPrefix(token.BANG, p.parsePrefixExpression)
 	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
+	p.registerPrefix(token.TRUE, p.parseBoolean)
+	p.registerPrefix(token.FALSE, p.parseBoolean)
 
 	//infixParse
 	p.infixParseFn = make(map[token.TokenType]infixParseFn)
@@ -91,7 +93,7 @@ func (p *Parser) peekError(t token.TokenType) {
 	p.errors = append(p.errors, msg)
 }
 
-func (p *Parser) noPrefixParseFnError(t token.TokenType)  {
+func (p *Parser) noPrefixParseFnError(t token.TokenType) {
 	msg := fmt.Sprintf("not prefix parse function for %s found", t)
 	p.errors = append(p.errors, msg)
 }
@@ -139,9 +141,13 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 	return lit
 }
 
+func (p *Parser) parseBoolean() ast.Expression {
+	return &ast.Boolean{Token: p.curToken, Value: p.curTokenIs(token.TRUE)}
+}
+
 func (p *Parser) parsePrefixExpression() ast.Expression {
 	expression := &ast.PrefixExpression{
-		Token: p.curToken,
+		Token:    p.curToken,
 		Operator: p.curToken.Literal,
 	}
 	p.nextToken()
