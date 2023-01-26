@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"io"
 	"monkey_learn/lexer"
-	"monkey_learn/token"
+	"monkey_learn/parser"
 )
 
 const PROMPT = ">>"
@@ -20,8 +20,23 @@ func Start(in io.Reader, out io.Writer) {
 		}
 		line := scanner.Text()
 		l := lexer.New(line)
-		for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
-			_, _ = fmt.Fprintf(out, "%+v\n", tok)
+		p := parser.New(l)
+		program := p.ParseProgram()
+		if len(p.Errors()) != 0 {
+			printParserErrors(out, p.Errors())
+			_, _ = io.WriteString(out, "\n")
+			continue
 		}
+
+		_, _ = io.WriteString(out, program.String())
+		_, _ = io.WriteString(out, "\n")
+	}
+}
+
+func printParserErrors(out io.Writer, errors []string) {
+	_, _ = io.WriteString(out, "Woops! We ran into some monkey business here!\n")
+	_, _ = io.WriteString(out, " parser errors:\n")
+	for _, msg := range errors {
+		_, _ = io.WriteString(out, "\t"+msg+"\n")
 	}
 }
