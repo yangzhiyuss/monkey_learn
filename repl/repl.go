@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"monkey_learn/evaluator"
 	"monkey_learn/lexer"
 	"monkey_learn/parser"
 )
@@ -28,8 +29,11 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		_, _ = io.WriteString(out, program.String())
-		_, _ = io.WriteString(out, "\n")
+		eval := evaluator.Eval(program)
+		if eval != nil {
+			_, _ = io.WriteString(out, eval.Inspect())
+			_, _ = io.WriteString(out, "\n")
+		}
 	}
 }
 
