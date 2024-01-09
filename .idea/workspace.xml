@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="84863608-c915-4e19-856a-e27ca095ab94" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evaluator/evaluator.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/evaluator.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/evaluator/evaluator_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/evaluator_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/object/object.go" beforeDir="false" afterPath="$PROJECT_DIR$/object/object.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,6 +30,9 @@
   <component name="GoLibraries">
     <option name="indexEntireGoPath" value="false" />
   </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
   <component name="ProjectId" id="2KP1GIU7NUVzLgmxiCXRRSbddED" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -39,14 +44,16 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="configurable..is.expanded" value="false" />
     <property name="configurable.GoLibrariesConfigurable.is.expanded" value="true" />
+    <property name="go.format.on.save.advertiser.fired" value="true" />
     <property name="go.formatter.settings.were.checked" value="true" />
     <property name="go.import.settings.migrated" value="true" />
     <property name="go.modules.go.list.on.any.changes.was.set" value="true" />
     <property name="go.sdk.automatically.set" value="true" />
+    <property name="go.watchers.conflict.with.on.save.actions.check.performed" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="com.goide.configuration.GoLibrariesConfigurableProvider" />
   </component>
-  <component name="RunManager" selected="Go Test.TestIfElseExpressions in monkey_learn/evaluator">
+  <component name="RunManager" selected="Go 测试.monkey_learn/evaluator 中的 TestReturnStatements">
     <configuration name="go build monkey_learn" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="monkey_learn" />
       <working_directory value="$PROJECT_DIR$" />
@@ -54,18 +61,6 @@
       <package value="monkey_learn" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$/main.go" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestIfElseExpressions in monkey_learn/evaluator" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="monkey_learn" />
-      <working_directory value="$PROJECT_DIR$/evaluator" />
-      <root_directory value="$PROJECT_DIR$" />
-      <kind value="PACKAGE" />
-      <package value="monkey_learn/evaluator" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestIfElseExpressions\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestIfExpression in monkey_learn/parser" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -104,13 +99,22 @@
       <pattern value="^\QTestParsingPrefixExpressions\E$" />
       <method v="2" />
     </configuration>
+    <configuration name="monkey_learn/evaluator 中的 TestReturnStatements" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="monkey_learn" />
+      <working_directory value="$PROJECT_DIR$/evaluator" />
+      <root_directory value="$PROJECT_DIR$" />
+      <kind value="PACKAGE" />
+      <package value="monkey_learn/evaluator" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestReturnStatements\E$" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestIfElseExpressions in monkey_learn/evaluator" />
-        <item itemvalue="Go Build.go build monkey_learn" />
-        <item itemvalue="Go Test.TestIfExpression in monkey_learn/parser" />
-        <item itemvalue="Go Test.TestOperatorPrecedenceParsing in monkey_learn/parser" />
-        <item itemvalue="Go Test.TestParsingPrefixExpressions in monkey_learn/parser" />
+        <item itemvalue="Go 测试.monkey_learn/evaluator 中的 TestReturnStatements" />
+        <item itemvalue="Go 构建.go build monkey_learn" />
       </list>
     </recent_temporary>
   </component>
